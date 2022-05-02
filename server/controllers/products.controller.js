@@ -5,7 +5,7 @@ const Product = models.Product;
 const getAllProducts = async (req, res) => {
   try {
     const products = await Product.findAll();
-    res.send(products);
+    res.json(products);
   } catch (error) {
     res.status(500).send(error);
     console.error(error);
