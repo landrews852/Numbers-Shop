@@ -1,9 +1,15 @@
 var express = require('express');
 var router = express.Router();
+var savedCartsRouter = require('./savedCarts');
+var productsRouter = require('./products');
 
-/* GET home page. */
-router.get('/', function(req, res, next) {
-  res.render('index', { title: 'Express' });
-});
+/* products ROUTER. */
+// router.use('/products', require('./products'));
+router.use('/products', productsRouter);
+
+/* savedCarts ROUTER. */
+// router.use('/mycarts', require('./savedCarts'));
+router.use('/savedCarts', savedCartsRouter);
+
 
 module.exports = router;
