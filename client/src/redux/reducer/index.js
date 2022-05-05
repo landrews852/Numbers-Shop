@@ -4,6 +4,8 @@ const initialState = {
   total: 0,
   amount: 0,
   isLoading: true,
+  myCarts: [],
+  cartsLoading: true,
 };
 
 export default function rootReducer(state = initialState, action) {
@@ -20,6 +22,7 @@ export default function rootReducer(state = initialState, action) {
         if (p.id === action.payload.id) {
           return true;
         }
+        return false;
       });
       if (!exists) {
         return {
@@ -70,7 +73,22 @@ export default function rootReducer(state = initialState, action) {
         amount: 0,
       };
 
+    case 'GET_CARTS':
+      return {
+        ...state,
+        myCarts: action.payload,
+        cartsLoading: false,
+      };
+
+    case 'LOAD_CART':
+      return {
+        ...state,
+        cart: [...state.cart, action.payload],
+        total: state.total + action.payload.price * action.payload.quantity,
+        amount: state.amount + 1,
+      };
+
     default:
-        return state;
+      return state;
   }
 }

@@ -5,6 +5,6 @@ export default function Dollarizer(props) {
     maximumFractionDigits: 2,
     minimumFractionDigits: 2,
   });
-  
+
   return formatter.format(props);
 }

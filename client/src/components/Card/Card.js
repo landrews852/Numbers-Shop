@@ -1,62 +1,51 @@
-import React from "react";
-import { makeStyles } from "@material-ui/core/styles";
-import Container from "@material-ui/core/Container";
-import Button from "@material-ui/core/Button";
-import { Toaster, toast } from "react-hot-toast";
-import { useDispatch, useSelector } from "react-redux";
-import Dollarizer from "../Tools/Dollarizer";
+import React from 'react';
+import { makeStyles } from '@material-ui/core/styles';
+import { useStyles } from '../Tools/myStyles.styles';
+import { Button } from '@mui/material';
+import { Toaster, toast } from 'react-hot-toast';
+import Dollarizer from '../Tools/Dollarizer';
 import AddShoppingCartIcon from '@mui/icons-material/AddShoppingCart';
+import { useMediaQuery, Container } from '@mui/material';
 
-const useStyles = makeStyles({
+const useLocaleStyles = makeStyles(theme => ({
   title: {
-    fontWeight: "bold",
+    fontWeight: 'bold',
   },
   img: {
     width: 150,
-    margin: "10px 10px 0"
+    margin: '10px 10px 0',
   },
-  main: {
-    backgroundColor: "#f5f5f5",
-    border: "1px solid rgba(0, 0, 0, .125)",
-    borderOpacity: "0.1",
-    padding: 10,
+  text: {
     margin: 10,
-    borderRadius: 5,
-    maxWidth: 300,
-    transition: "all .15s ease-in-out",
-    "&:hover": {
-      boxShadow: "1px 1px 5px black"
-    }
   },
-  btn: {
-    backgroundColor: "black",
-    color: "white",
-    border: "1px solid black",
-    "&:hover": {
-      backgroundColor: "white",
-      color: "black",
-    }
-  },
-});
+}));
 
 export default function Card(props) {
-
-  const dispatch = useDispatch();
-  const classes = useStyles();
+  const card = { maxWidth: 320, justifyContent: 'space-between' };
+  const classes = useStyles(card);
+  const localeClasses = useLocaleStyles();
 
   return (
-    <Container>
-      <div key={props.id} className={classes.main}>
-        <img className={classes.img} src={props.image}/>
-        <h2 className={classes.title} >{props.name}</h2>
-        <p className={classes.text} >{props.description}</p>
-        <p className={classes.text} >Price {Dollarizer(props.price)}</p>
-        <Button className={classes.btn} onClick={props.onClick}>
-          <AddShoppingCartIcon />
+    <div key={props.id} className={classes.card}>
+      <div>
+        <img className={localeClasses.img} src={props.image} />
+      </div>
+      <h2 className={classes.title}>{props.name}</h2>
+      <p className={localeClasses.text}>{props.description}</p>
+      <br />
+      <p className={classes.text}>Price ${Dollarizer(props.price)}</p>
+      <div>
+        <Button
+          color="primary"
+          variant="contained"
+          onClick={props.onClick}
+          startIcon={<AddShoppingCartIcon />}>
           Add to cart
         </Button>
       </div>
+      <br />
+      <br />
       <Toaster position="bottom-center" reverseOrder={false} />
-    </Container>
-  )
+    </div>
+  );
 }

@@ -1,22 +1,30 @@
-import * as React from 'react';
-import { useSelector } from 'react-redux';
+import React, { useEffect } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
 import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
-import AppBar from '@material-ui/core/AppBar';
-import Toolbar from '@material-ui/core/Toolbar';
-import Typography from '@material-ui/core/Typography';
-import useScrollTrigger from '@material-ui/core/useScrollTrigger';
-import IconButton from '@material-ui/core/IconButton';
-import Badge from '@material-ui/core/Badge';
+import { AppBar, Box, Toolbar, useScrollTrigger, IconButton, Badge } from '@mui/material';
 import makeStyles from '@material-ui/core/styles/makeStyles';
-import HomeIcon from '@mui/icons-material/Home';
-import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
+import Home from '@mui/icons-material/Home';
+import {
+  ShoppingCart,
+  ListAltRounded,
+  LooksOneOutlined,
+  LooksTwoOutlined,
+  Looks3,
+} from '@mui/icons-material';
+import styled from '@mui/material/styles/styled';
+import { getAllCarts } from '../../redux/actions';
 
 const useStyles = makeStyles({
   Toolbar: {
     justifyContent: 'space-between',
-  }
-})
+  },
+});
+
+const Icons = styled(Box)(({ theme }) => ({
+  display: 'flex',
+  gap: theme.spacing(2),
+}));
 
 function ElevationScroll(props) {
   const { children, window } = props;
@@ -37,25 +45,52 @@ ElevationScroll.propTypes = {
 };
 
 export default function Navbar(props) {
+  const dispatch = useDispatch();
   const classes = useStyles();
-  const amount = useSelector(state => state.amount);;
+  const amount = useSelector(state => state.amount);
+  const myCarts = useSelector(state => state.myCarts);
+
+  useEffect(() => {
+    dispatch(getAllCarts());
+  }, []);
 
   return (
     <React.Fragment>
       <ElevationScroll {...props}>
         <AppBar>
           <Toolbar className={classes.Toolbar}>
-            <IconButton component={Link} to="/" edge="end" >
-              <HomeIcon />
+            <IconButton component={Link} to="/" edge="end">
+              <Home />
             </IconButton>
-            <Typography variant="h5" color="" component="div">
-              NumberShop
-            </Typography>
-            <IconButton edge='start' component={Link} to="/cart" >
-              <Badge badgeContent={amount} color="secondary">
-                <ShoppingCartIcon />
-              </Badge>
-            </IconButton>
+            <Box>
+              <LooksOneOutlined />
+              <LooksTwoOutlined />
+              <Looks3 />
+            </Box>
+            <Icons>
+              {myCarts.length ? (
+                <IconButton
+                  component={Link}
+                  to="/mycarts"
+                  edge="start"
+                  children={
+                    <Badge badgeContent={myCarts.length} color="error">
+                      <ListAltRounded />
+                    </Badge>
+                  }
+                />
+              ) : null}
+              <IconButton
+                edge="start"
+                component={Link}
+                to="/cart"
+                children={
+                  <Badge badgeContent={amount} color="error">
+                    <ShoppingCart />
+                  </Badge>
+                }
+              />
+            </Icons>
           </Toolbar>
         </AppBar>
       </ElevationScroll>
