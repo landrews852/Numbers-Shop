@@ -9,7 +9,7 @@ router.use('/products', productsRouter);
 
 /* savedCarts ROUTER. */
 // router.use('/mycarts', require('./savedCarts'));
-router.use('/savedCarts', savedCartsRouter);
+router.use('/carts', savedCartsRouter);
 
 
 module.exports = router;

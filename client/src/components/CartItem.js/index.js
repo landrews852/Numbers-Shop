@@ -1,47 +1,52 @@
 import React from 'react';
 import { useDispatch } from 'react-redux';
-import { TableRow, TableCell, Button } from "@material-ui/core";
-import { makeStyles } from "@material-ui/core/styles";
+import { TableRow, TableCell, IconButton } from '@mui/material';
+import { makeStyles } from '@material-ui/core/styles';
+import { useStyles } from '../Tools/myStyles.styles';
 import Dollarizer from '../Tools/Dollarizer';
 // import Toaster from '../Tools/Toaster';
-import { Toaster, toast } from "react-hot-toast";
+import { Toaster, toast } from 'react-hot-toast';
 import { removeFromCart } from '../../redux/actions';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import Delete from '@mui/icons-material/DeleteForeverRounded';
 import { increment, decrement } from '../../redux/actions';
+import useMediaQuery from '@mui/material/useMediaQuery';
 
-const useStyles = makeStyles({
+const useLocaleStyles = makeStyles({
   img: {
-    width: "50px",
+    width: '50px',
   },
   tableRow: {
-    "&:hover": {
-      backgroundColor: "#f5f5f5",
+    '&:hover': {
+      backgroundColor: '#f5f5f5',
     },
   },
   total: {
-    fontWeight: "bold",
-    color: "green",
+    fontWeight: 'bold',
+    color: 'green',
   },
   cevrons: {
-    textAlign: "center",
-    width: 70,
+    textAlign: 'center',
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   cevron: {
-
-    color: "black",
+    color: 'black',
+    alignSelf: 'center',
   },
   name: {
-    fontWeight: "bold",
+    fontWeight: 'bold',
+    fontSize: 20,
   },
   quantity: {
-    fontWeight: "bold",
+    fontWeight: 'bold',
   },
 });
 
 export default function CartItem(e) {
   const classes = useStyles();
+  const localeClasses = useLocaleStyles();
   const dispatch = useDispatch();
   const product = e.product;
 
@@ -49,42 +54,73 @@ export default function CartItem(e) {
 
   const removeFromCartHandler = product => {
     dispatch(removeFromCart(product));
-    toast.error("Removed from cart");
+    toast.error('Removed from cart');
   };
+
+  const matches = useMediaQuery('(min-width:600px)');
 
   return (
     <>
-      <TableRow className={classes.tableRow} key={product.id}>
-        <TableCell>
-          <img className={classes.img} src={product.image} alt={product.name} />
+      <TableRow key={product.id} hover={true}>
+        <TableCell size="small" align="center" sx={{ display: { xs: 'none', sm: 'table-cell' } }}>
+          <img className={localeClasses.img} src={product.image} alt={product.name} />
         </TableCell>
-        <TableCell><p className={classes.name}>{product.name}</p><p>${Dollarizer(product.price)}</p></TableCell>
-        <TableCell className={classes.cevrons}>
-          <Button className={classes.cevron} onClick={() => dispatch(increment(product))} >
-            <KeyboardArrowUpIcon shapeRendering='rounded' />
-          </Button>
-          <span className={classes.quantity}>{product.quantity}</span>
-          {product.quantity > 1?
-            <Button className={classes.cevron} onClick={() => dispatch(decrement(product))} >
-              <KeyboardArrowDownIcon shapeRendering='rounded' />
-            </Button>
-          : <Button disabled className={classes.cevron} >
-              <KeyboardArrowDownIcon shapeRendering='rounded' />
-            </Button>}
+        {!matches ? (
+          <TableCell size="small" align="center">
+            <span className={localeClasses.name}>{product.name}</span>
+            <br />
+            <span>${Dollarizer(product.price)}</span>
+            <br />
+            <br />
+            <span>
+              <b>Sum:</b>
+            </span>
+            <br />
+            <span>${Dollarizer(totalItem)}</span>
+          </TableCell>
+        ) : (
+          <>
+            <TableCell size="small" align="center">
+              <p className={localeClasses.name}>{product.name}</p>
+              <p>${Dollarizer(product.price)}</p>
+            </TableCell>
+            <TableCell size="small" align="center">
+              <p>
+                <b>Sum:</b>
+              </p>
+              <p>${Dollarizer(totalItem)}</p>
+            </TableCell>
+          </>
+        )}
+        <TableCell size="small" align="center">
+          <IconButton className={localeClasses.cevron} onClick={() => dispatch(increment(product))}>
+            <KeyboardArrowUpIcon shapeRendering="rounded" />
+          </IconButton>
+          <p className={localeClasses.quantity}>{product.quantity}</p>
+          {product.quantity > 1 ? (
+            <IconButton
+              className={localeClasses.cevron}
+              onClick={() => dispatch(decrement(product))}>
+              <KeyboardArrowDownIcon shapeRendering="rounded" />
+            </IconButton>
+          ) : (
+            <IconButton disabled className={localeClasses.cevron}>
+              <KeyboardArrowDownIcon shapeRendering="rounded" />
+            </IconButton>
+          )}
         </TableCell>
-        <TableCell>${Dollarizer(totalItem)}</TableCell>
-        <TableCell>
-          <Button
+        <TableCell size="small" align="center">
+          <IconButton
             variant="outlined"
-            color="secondary"
-            onClick={() => removeFromCartHandler(product)}
-          >
-            {/* Remove */}
-            <Delete />
-          </Button>
+            size="large"
+            color="error"
+            className={classes.btnX}
+            onClick={() => removeFromCartHandler(product)}>
+            <Delete size="large" />
+          </IconButton>
         </TableCell>
+        <Toaster position="bottom-center" reverseOrder={false} />
       </TableRow>
-      <Toaster position='bottom-center' reverseOrder={false} />
     </>
-  )
-};
+  );
+}

@@ -4,6 +4,7 @@ import './App.css';
 import Navbar from './components/Navbar';
 import Cart from './pages/cart';
 import Home from './pages/home';
+import MyCarts from './pages/myCarts';
 
 export default function App() {
   return (
@@ -11,10 +12,11 @@ export default function App() {
     <BrowserRouter>
       <div className="App">
         <Navbar />
-          <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/cart" element={<Cart />} />
-          </Routes>
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/cart" element={<Cart />} />
+          <Route path="/mycarts" element={<MyCarts />} />
+        </Routes>
       </div>
     </BrowserRouter>
   );

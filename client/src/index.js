@@ -5,12 +5,16 @@ import App from './App';
 import reportWebVitals from './reportWebVitals';
 import { Provider } from 'react-redux';
 import { store } from './redux/store/index';
+import { customTheme } from './customTheme';
+import { ThemeProvider } from '@mui/material';
 
 ReactDOM.render(
   <Provider store={store}>
-    {/* <React.StrictMode> */}
+    {/* <ThemeProvider theme={customTheme}> */}
+    <React.StrictMode>
       <App />
-    {/* </React.StrictMode> */}
+    </React.StrictMode>
+    {/* </ThemeProvider> */}
   </Provider>,
   document.getElementById('root')
 );
